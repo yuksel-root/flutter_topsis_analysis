@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_topsis_analysis/core/constants/data.dart';
 import 'package:flutter_topsis_analysis/core/notifier/tabbar_navigation_notifier.dart';
-import 'package:flutter_topsis_analysis/view/editable_table.dart';
-
+import 'package:flutter_topsis_analysis/view/result_table.dart';
+import 'dart:math';
 import 'package:provider/provider.dart';
 
 class TabbarView extends StatefulWidget {
@@ -57,10 +58,28 @@ class _TabbarViewState extends State<TabbarView> with TickerProviderStateMixin {
                 ]),
           ),
           body: TabBarView(
-            children: List<Widget>.generate(6, (index) => EditablePage()),
+            children: List<Widget>.generate(
+              6,
+              (index) => ResultTable(
+                calculate: Normalization,
+              ),
+            ),
           ),
         );
       }),
     );
+  }
+
+  String Normalization(dynamic aij, int columnIndex) {
+    double payda = 0;
+
+    if (columnIndex == 0) return aij.toString();
+
+    for (int i = 0; i < Data.rowData.length; i++) {
+      payda += Data.rowData[i]["row"][columnIndex] *
+          Data.rowData[i]["row"][columnIndex];
+    }
+
+    return (aij / sqrt(payda)).toString();
   }
 }

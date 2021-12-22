@@ -27,7 +27,7 @@ class _BottomTabbarViewState extends State<BottomTabbarView> {
   }
 
   static List<Widget> currentScreen = [
-    EditableTable(),
+    DataView(),
     TabbarView(),
   ];
 
