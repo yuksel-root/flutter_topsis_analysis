@@ -37,7 +37,7 @@ class _DataViewState extends State<DataView> {
               Expanded(
                 child: Container(
                   child: buildForm(),
-                  width: context.mediaQuery.size.width / 2,
+                  width: context.mediaQuery.size.width / 1.4,
                 ),
                 flex: 5,
               ),
@@ -66,7 +66,8 @@ class _DataViewState extends State<DataView> {
                 controller: rowController,
                 decoration: InputDecoration(
                   hintText: "Satır sayısı",
-                  icon: buildContaierIconField(Icons.add_circle_outlined),
+                  icon: buildContaierIconField(
+                      Icons.assignment_rounded, Color(0xff551a8b)),
                   enabledBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: Colors.grey)),
                   focusedBorder: UnderlineInputBorder(
@@ -83,7 +84,8 @@ class _DataViewState extends State<DataView> {
                 controller: columnController,
                 decoration: InputDecoration(
                   hintText: "Sütun sayısı",
-                  icon: buildContaierIconField(Icons.add_circle_outline_sharp),
+                  icon: buildContaierIconField(
+                      Icons.assessment_rounded, Color(0xff1c0f45)),
                   enabledBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: Colors.grey)),
                   focusedBorder: UnderlineInputBorder(
@@ -102,7 +104,10 @@ class _DataViewState extends State<DataView> {
                   Spacer(),
                   Expanded(
                       child: ElevatedButton(
-                          onPressed: () {}, child: Text("Hesapla"))),
+                          onPressed: () {},
+                          child: Text("Hesapla",
+                              style: TextStyle(
+                                  color: Colors.white, fontSize: 14)))),
                 ],
               ),
             )
@@ -142,12 +147,8 @@ class _DataViewState extends State<DataView> {
           kriterData;
         });
       },
-      child: Center(
-          child: Text("Tablo Oluştur",
-              style: Theme.of(context)
-                  .textTheme
-                  .headline6
-                  ?.copyWith(color: Colors.white))),
+      child: Text("Tablo Oluştur",
+          style: TextStyle(color: Colors.white, fontSize: 15)),
       style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all<Color>(Color(0xff1c0f45))),
     );
@@ -160,14 +161,16 @@ class _DataViewState extends State<DataView> {
     );
   }
 
-  Container buildContaierIconField(IconData icon) {
+  Container buildContaierIconField(IconData icon, Color iconColor) {
     return Container(
+      height: context.dynamicWidth(0.05),
+      width: context.dynamicWidth(0.05),
       decoration: BoxDecoration(
-        color: Color(0xff1c0f45),
+        color: Colors.white,
         borderRadius: BorderRadius.circular(10),
       ),
-      child: Icon(icon, color: Colors.white),
-      padding: EdgeInsets.all(10),
+      child: Icon(icon, color: iconColor),
+      padding: EdgeInsets.all(context.dynamicWidth(0.0025)),
     );
   }
 
@@ -185,7 +188,6 @@ class _DataViewState extends State<DataView> {
   }
 
   List<DataRow> getRows() => rowData.map((row) {
-        //rowData[0]['aday'].map((a) => cells.add(a));
         return DataRow(
           cells: Utils.modelBuilder(row['row'], (index, cell) {
             return DataCell(

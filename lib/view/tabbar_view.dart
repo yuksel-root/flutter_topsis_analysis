@@ -125,10 +125,10 @@ class _TabbarViewState extends State<TabbarView> with TickerProviderStateMixin {
       for (int k = 0; k < Data.NormalizationListData.length; k++) {
         Data.NormalizationListData[k]["row"][i] /= sqrt(n); //normalize matris
         Data.NormalizationListData[k]["row"][i] =
-            Data.NormalizationListData[k]["row"][i].toStringAsFixed(3);
+            Data.NormalizationListData[k]["row"][i];
       }
 
-      row.add(sqrt(n).toStringAsFixed(3)); //en alt sütun
+      row.add(sqrt(n)); //en alt sütun
 
     }
 
@@ -156,11 +156,7 @@ class _TabbarViewState extends State<TabbarView> with TickerProviderStateMixin {
       final arr = [];
 
       for (int m = 0; m < Data.kriterData.length; m++) {
-        if (m == 0) {
-          arr.add(Data.NormalizationListData[l]["row"][m]);
-        } else {
-          arr.add(double.parse(Data.NormalizationListData[l]["row"][m]));
-        }
+        arr.add(Data.NormalizationListData[l]["row"][m]);
       }
       // print(arr);
       Data.WeightListData.add({"row": arr});
@@ -176,8 +172,7 @@ class _TabbarViewState extends State<TabbarView> with TickerProviderStateMixin {
         // });
 
         Data.WeightListData[k]["row"][i] *= Data.rowData[0]["row"][i];
-        Data.WeightListData[k]["row"][i] =
-            Data.WeightListData[k]["row"][i].toStringAsFixed(4);
+        Data.WeightListData[k]["row"][i] = Data.WeightListData[k]["row"][i];
       }
     }
 
@@ -206,11 +201,7 @@ class _TabbarViewState extends State<TabbarView> with TickerProviderStateMixin {
       final arr = [];
 
       for (int m = 0; m < Data.kriterData.length; m++) {
-        if (m == 0) {
-          arr.add(Data.WeightListData[l]["row"][m]);
-        } else {
-          arr.add(double.parse(Data.WeightListData[l]["row"][m]));
-        }
+        arr.add(Data.WeightListData[l]["row"][m]);
       }
       // print(arr);
       Data.OptimalListData.add({"row": arr});
