@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_topsis_analysis/components/scrollable_widget.dart';
 import 'package:flutter_topsis_analysis/components/utils.dart';
-import 'package:flutter_topsis_analysis/core/constants/data.dart';
-
-typedef MyCalculator = String Function(dynamic aij, int columnIndex);
 
 class ResultTable extends StatefulWidget {
-  const ResultTable({Key? key, required this.calculate}) : super(key: key);
+  final rowData;
+  final kriterData;
+  const ResultTable({Key? key, required this.rowData, required this.kriterData})
+      : super(key: key);
 
   @override
   _ResultTableState createState() => _ResultTableState();
-
-  final MyCalculator calculate;
 }
 
 class _ResultTableState extends State<ResultTable> {
@@ -22,8 +20,8 @@ class _ResultTableState extends State<ResultTable> {
   void initState() {
     super.initState();
 
-    this.rowData = List.of(Data.rowData);
-    this.kriterData = List.of(Data.kriterData);
+    this.rowData = List.of(widget.rowData);
+    this.kriterData = List.of(widget.kriterData);
   }
 
   @override
@@ -51,7 +49,7 @@ class _ResultTableState extends State<ResultTable> {
         return DataRow(
           cells: Utils.modelBuilder(row['row'], (index, cell) {
             return DataCell(
-              Text(widget.calculate(cell, index)),
+              Text(cell.toString()),
               onTap: () {},
             );
           }),

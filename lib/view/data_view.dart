@@ -37,9 +37,9 @@ class _DataViewState extends State<DataView> {
               Expanded(
                 child: Container(
                   child: buildForm(),
-                  width: context.mediaQuery.size.width / 3,
+                  width: context.mediaQuery.size.width / 2,
                 ),
-                flex: 1,
+                flex: 5,
               ),
               Expanded(
                 child: SingleChildScrollView(
@@ -48,9 +48,9 @@ class _DataViewState extends State<DataView> {
                       ? SingleChildScrollView(
                           child: buildDataTable(),
                           scrollDirection: Axis.horizontal)
-                      : SizedBox(),
+                      : Spacer(),
                 ),
-                flex: 3,
+                flex: 10,
               )
             ],
           ),
@@ -60,41 +60,51 @@ class _DataViewState extends State<DataView> {
   Form buildForm() => Form(
         child: Column(
           children: [
-            TextFormField(
-              controller: rowController,
-              decoration: InputDecoration(
-                hintText: "Satır sayısı",
-                icon: buildContaierIconField(Icons.add_circle_outlined),
-                enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey)),
-                focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black)),
-                border: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black)),
+            Flexible(
+              flex: 10,
+              child: TextFormField(
+                controller: rowController,
+                decoration: InputDecoration(
+                  hintText: "Satır sayısı",
+                  icon: buildContaierIconField(Icons.add_circle_outlined),
+                  enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey)),
+                  focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black)),
+                  border: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black)),
+                ),
               ),
             ),
-            SizedBox(height: context.dynamicHeight(0.008)), //5px
-            TextFormField(
-              controller: columnController,
-              decoration: InputDecoration(
-                hintText: "Sütun sayısı",
-                icon: buildContaierIconField(Icons.add_circle_outline_sharp),
-                enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey)),
-                focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black)),
-                border: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black)),
+            Spacer(), //5px
+            Flexible(
+              flex: 10,
+              child: TextFormField(
+                controller: columnController,
+                decoration: InputDecoration(
+                  hintText: "Sütun sayısı",
+                  icon: buildContaierIconField(Icons.add_circle_outline_sharp),
+                  enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey)),
+                  focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black)),
+                  border: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black)),
+                ),
               ),
             ),
-            SizedBox(height: context.dynamicHeight(0.003)), //2px
-
-            Row(
-              children: [
-                createTableButton(),
-                SizedBox(width: context.dynamicHeight(0.005)),
-                ElevatedButton(onPressed: () {}, child: Text("Hesapla")),
-              ],
+            Spacer(), //2px
+            Expanded(
+              flex: 20,
+              child: Row(
+                children: [
+                  Expanded(child: createTableButton()),
+                  Spacer(),
+                  Expanded(
+                      child: ElevatedButton(
+                          onPressed: () {}, child: Text("Hesapla"))),
+                ],
+              ),
             )
           ],
         ),
