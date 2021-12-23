@@ -76,8 +76,12 @@ class _TabbarViewState extends State<TabbarView> with TickerProviderStateMixin {
                 kriterData: Data.kriterData,
               ),
               ResultTable(
-                rowData: getNormalList(),
-                kriterData: Data.kriterData,
+                rowData: getSiList(),
+                kriterData: [
+                  {"Kriter": ""},
+                  {"Kriter": "Si*"},
+                  {"Kriter": "Si-"}
+                ],
               ),
               ResultTable(
                 rowData: getNormalList(),
@@ -249,5 +253,52 @@ class _TabbarViewState extends State<TabbarView> with TickerProviderStateMixin {
     Data.OptimalListData.add({"row": arrMin});
 
     return Data.OptimalListData;
+  }
+
+  List<dynamic> getSiList() {
+    Data.SiListData.clear();
+
+    for (int l = 1; l < Data.OptimalListData.length - 2; l++) {
+      final arr = [];
+      arr.add("aday" + l.toString());
+      double n = 0;
+      for (int m = 1; m < Data.kriterData.length; m++) {
+        n += (Data.OptimalListData[l]["row"][m] -
+                Data.OptimalListData[Data.OptimalListData.length - 2]["row"]
+                    [m]) *
+            (Data.OptimalListData[l]["row"][m] -
+                Data.OptimalListData[Data.OptimalListData.length - 2]["row"]
+                    [m]);
+        // print({
+        //   "pozitif": "Aday",
+        //   "s1": Data.OptimalListData[l]["row"][m],
+        //   "s2": Data.OptimalListData[Data.OptimalListData.length - 2]["row"][m],
+        //   "n": n
+        // });
+      }
+      arr.add(sqrt(n));
+      n = 0;
+      for (int m = 1; m < Data.kriterData.length; m++) {
+        n += (Data.OptimalListData[l]["row"][m] -
+                Data.OptimalListData[Data.OptimalListData.length - 1]["row"]
+                    [m]) *
+            (Data.OptimalListData[l]["row"][m] -
+                Data.OptimalListData[Data.OptimalListData.length - 1]["row"]
+                    [m]);
+        // print({
+        //   "Negatif": "Aday",
+        //   "s1": Data.OptimalListData[l]["row"][m],
+        //   "s2": Data.OptimalListData[Data.OptimalListData.length - 1]["row"][m],
+        //   "n": n
+        // });
+      }
+      arr.add(sqrt(n));
+
+      // print("------------------------------");
+
+      Data.SiListData.add({"row": arr});
+    }
+
+    return Data.SiListData;
   }
 }

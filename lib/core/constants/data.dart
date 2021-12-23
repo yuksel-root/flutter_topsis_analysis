@@ -126,4 +126,5 @@ class Data {
   static List<dynamic> NormalizationListData = <dynamic>[];
   static List<dynamic> WeightListData = <dynamic>[];
   static List<dynamic> OptimalListData = <dynamic>[];
+  static List<dynamic> SiListData = <dynamic>[];
 }
