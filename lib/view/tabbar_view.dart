@@ -58,28 +58,112 @@ class _TabbarViewState extends State<TabbarView> with TickerProviderStateMixin {
                 ]),
           ),
           body: TabBarView(
-            children: List<Widget>.generate(
-              6,
-              (index) => ResultTable(
-                calculate: Normalization,
+            children: [
+              ResultTable(
+                rowData: getNormalList(),
+                kriterData: Data.kriterData,
               ),
-            ),
+              ResultTable(
+                rowData: getNormalList(),
+                kriterData: Data.kriterData,
+              ),
+              ResultTable(
+                rowData: getNormalList(),
+                kriterData: Data.kriterData,
+              ),
+              ResultTable(
+                rowData: getNormalList(),
+                kriterData: Data.kriterData,
+              ),
+              ResultTable(
+                rowData: getNormalList(),
+                kriterData: Data.kriterData,
+              ),
+              ResultTable(
+                rowData: getNormalList(),
+                kriterData: Data.kriterData,
+              ),
+            ],
           ),
         );
       }),
     );
   }
 
-  String Normalization(dynamic aij, int columnIndex) {
-    double payda = 0;
+  List<dynamic> getNormalList() {
+    final row = [];
+    row.add("sqrt(Eaij)");
+    // print({"length:i": Data.rowData.length});
+    // print({"lrng:j", Data.kriterData.length});
+    final List<dynamic> newRowData = [];
 
-    if (columnIndex == 0) return aij.toString();
-
-    for (int i = 0; i < Data.rowData.length; i++) {
-      payda += Data.rowData[i]["row"][columnIndex] *
-          Data.rowData[i]["row"][columnIndex];
+    for (int l = 1; l < Data.rowData.length; l++) {
+      final arr = [];
+      for (int m = 0; m < Data.kriterData.length; m++) {
+        arr.add(Data.rowData[l]["row"][m]);
+      }
+      //print(arr);
+      newRowData.add({"row": arr});
     }
 
-    return (aij / sqrt(payda)).toString();
+    for (int i = 1; i < (Data.kriterData.length); i++) {
+      double n = 0;
+
+      for (int j = 1; j < (Data.rowData.length); j++) {
+        // print({
+        //   "i": i,
+        //   "j": j,
+        //   "data": Data.rowData[j]["row"][i],
+        // });
+
+        n += Data.rowData[j]["row"][i] * Data.rowData[j]["row"][i];
+      }
+      // print(row);
+      for (int k = 0; k < newRowData.length; k++) {
+        newRowData[k]["row"][i] /= sqrt(n); //normalize matris
+        newRowData[k]["row"][i] = newRowData[k]["row"][i].toStringAsFixed(3);
+      }
+
+      row.add(sqrt(n).toStringAsFixed(3)); //en alt sütun
+
+    }
+
+    newRowData.add({"row": row});
+    // print(newRowData);
+    return newRowData;
+  }
+
+  List<dynamic> getWeightNormalList() {
+    final row = [];
+    row.add("sqrt(Eaij)");
+    // print({"length:i": Data.rowData.length});
+    // print({"lrng:j", Data.kriterData.length});
+    final List<dynamic> newRowData = [];
+
+    for (int l = 0; l < Data.rowData.length; l++) {
+      final arr = [];
+      for (int m = 0; m < Data.kriterData.length; m++) {
+        arr.add(Data.rowData[l]["row"][m]);
+      }
+      // print(arr);
+      newRowData.add({"row": arr});
+    }
+
+    for (int i = 1; i < (Data.kriterData.length); i++) {
+      double n = 0;
+
+      for (int j = 0; j < (Data.rowData.length); j++) {
+        n += Data.rowData[j]["row"][i] * Data.rowData[j]["row"][i];
+      }
+      for (int k = 0; k < Data.rowData.length; k++) {
+        newRowData[k]["row"][i] /= sqrt(n);
+        newRowData[k]["row"][i] = newRowData[k]["row"][i].toStringAsFixed(3);
+      }
+      row.add(sqrt(n).toStringAsFixed(3));
+    }
+
+    newRowData.add({"row": row});
+
+    return newRowData;
   }
 }
