@@ -60,7 +60,7 @@ class _TabbarViewState extends State<TabbarView> with TickerProviderStateMixin {
           body: TabBarView(
             children: [
               ResultTable(
-                rowData: getNormalList(),
+                rowData: getDecisionList(),
                 kriterData: Data.kriterData,
               ),
               ResultTable(
@@ -68,11 +68,11 @@ class _TabbarViewState extends State<TabbarView> with TickerProviderStateMixin {
                 kriterData: Data.kriterData,
               ),
               ResultTable(
-                rowData: getNormalList(),
+                rowData: getWeightNormalList(),
                 kriterData: Data.kriterData,
               ),
               ResultTable(
-                rowData: getNormalList(),
+                rowData: getOptimalList(),
                 kriterData: Data.kriterData,
               ),
               ResultTable(
@@ -90,26 +90,29 @@ class _TabbarViewState extends State<TabbarView> with TickerProviderStateMixin {
     );
   }
 
+  List<dynamic> getDecisionList() {
+    return Data.rowData;
+  }
+
   List<dynamic> getNormalList() {
     final row = [];
     row.add("sqrt(Eaij)");
     // print({"length:i": Data.rowData.length});
     // print({"lrng:j", Data.kriterData.length});
-    final List<dynamic> newRowData = [];
-
+    Data.NormalizationListData.clear();
     for (int l = 1; l < Data.rowData.length; l++) {
       final arr = [];
       for (int m = 0; m < Data.kriterData.length; m++) {
         arr.add(Data.rowData[l]["row"][m]);
       }
       //print(arr);
-      newRowData.add({"row": arr});
+      Data.NormalizationListData.add({"row": arr});
     }
-
+    // print({"normal": Data.NormalizationListData});
     for (int i = 1; i < (Data.kriterData.length); i++) {
       double n = 0;
 
-      for (int j = 1; j < (Data.rowData.length); j++) {
+      for (int j = 0; j < (Data.rowData.length); j++) {
         // print({
         //   "i": i,
         //   "j": j,
@@ -119,51 +122,132 @@ class _TabbarViewState extends State<TabbarView> with TickerProviderStateMixin {
         n += Data.rowData[j]["row"][i] * Data.rowData[j]["row"][i];
       }
       // print(row);
-      for (int k = 0; k < newRowData.length; k++) {
-        newRowData[k]["row"][i] /= sqrt(n); //normalize matris
-        newRowData[k]["row"][i] = newRowData[k]["row"][i].toStringAsFixed(3);
+      for (int k = 0; k < Data.NormalizationListData.length; k++) {
+        Data.NormalizationListData[k]["row"][i] /= sqrt(n); //normalize matris
+        Data.NormalizationListData[k]["row"][i] =
+            Data.NormalizationListData[k]["row"][i].toStringAsFixed(3);
       }
 
       row.add(sqrt(n).toStringAsFixed(3)); //en alt sütun
 
     }
 
-    newRowData.add({"row": row});
-    // print(newRowData);
-    return newRowData;
+    Data.NormalizationListData.add({"row": row});
+    // print(Data.NormalizationData);
+    return Data.NormalizationListData;
   }
 
   List<dynamic> getWeightNormalList() {
-    final row = [];
-    row.add("sqrt(Eaij)");
     // print({"length:i": Data.rowData.length});
     // print({"lrng:j", Data.kriterData.length});
-    final List<dynamic> newRowData = [];
+    Data.WeightListData.clear();
 
-    for (int l = 0; l < Data.rowData.length; l++) {
+    for (int l = 0; l < 1; l++) {
       final arr = [];
+
       for (int m = 0; m < Data.kriterData.length; m++) {
         arr.add(Data.rowData[l]["row"][m]);
       }
       // print(arr);
-      newRowData.add({"row": arr});
+      Data.WeightListData.add({"row": arr});
     }
 
+    for (int l = 0; l < Data.NormalizationListData.length - 1; l++) {
+      final arr = [];
+
+      for (int m = 0; m < Data.kriterData.length; m++) {
+        if (m == 0) {
+          arr.add(Data.NormalizationListData[l]["row"][m]);
+        } else {
+          arr.add(double.parse(Data.NormalizationListData[l]["row"][m]));
+        }
+      }
+      // print(arr);
+      Data.WeightListData.add({"row": arr});
+    }
+    // print({"weightList": Data.WeightListData});
     for (int i = 1; i < (Data.kriterData.length); i++) {
-      double n = 0;
+      for (int k = 1; k < Data.WeightListData.length; k++) {
+        // print({
+        //   "forW": Data.WeightListData[k]["row"][i],
+        //   "forN": Data.NormalizationListData[k]["row"][i],
+        //   "i": i,
+        //   "k": k,
+        // });
 
-      for (int j = 0; j < (Data.rowData.length); j++) {
-        n += Data.rowData[j]["row"][i] * Data.rowData[j]["row"][i];
+        Data.WeightListData[k]["row"][i] *= Data.rowData[0]["row"][i];
+        Data.WeightListData[k]["row"][i] =
+            Data.WeightListData[k]["row"][i].toStringAsFixed(4);
       }
-      for (int k = 0; k < Data.rowData.length; k++) {
-        newRowData[k]["row"][i] /= sqrt(n);
-        newRowData[k]["row"][i] = newRowData[k]["row"][i].toStringAsFixed(3);
-      }
-      row.add(sqrt(n).toStringAsFixed(3));
     }
 
-    newRowData.add({"row": row});
+    //Data.WeightListData.add({"row": row});
+    // print({"WD": Data.WeightListData});
 
-    return newRowData;
+    return Data.WeightListData;
+  }
+
+  List<dynamic> getOptimalList() {
+    Data.OptimalListData.clear();
+
+    for (int l = 0; l < 1; l++) {
+      final arr = [];
+
+      for (int m = 0; m < Data.kriterData.length; m++) {
+        if (m == 0)
+          arr.add("Kriter Yönü");
+        else
+          arr.add("Fayda");
+      }
+      // print(arr);
+      Data.OptimalListData.add({"row": arr});
+    }
+
+    for (int l = 1; l < Data.WeightListData.length; l++) {
+      final arr = [];
+
+      for (int m = 0; m < Data.kriterData.length; m++) {
+        if (m == 0) {
+          arr.add(Data.WeightListData[l]["row"][m]);
+        } else {
+          arr.add(double.parse(Data.WeightListData[l]["row"][m]));
+        }
+      }
+      // print(arr);
+      Data.OptimalListData.add({"row": arr});
+    }
+
+    final arrMax = [];
+    final arrMin = [];
+    arrMax.add("A*");
+    arrMin.add("A-");
+
+    for (int m = 1; m < Data.kriterData.length; m++) {
+      double max = 0;
+      double min = 9999;
+
+      for (int l = 1; l < Data.OptimalListData.length; l++) {
+        // print(
+        //   {
+        //     "d": Data.OptimalListData[l]["row"][m] is double,
+        //     "max": max,
+        //     "min": min,
+        //   },
+        // );
+        if (max < Data.OptimalListData[l]["row"][m]) {
+          max = Data.OptimalListData[l]["row"][m];
+        }
+        if (min > Data.OptimalListData[l]["row"][m]) {
+          min = Data.OptimalListData[l]["row"][m];
+        }
+      }
+      arrMax.add(max);
+      arrMin.add(min);
+    }
+    // print("cc");
+    Data.OptimalListData.add({"row": arrMax});
+    Data.OptimalListData.add({"row": arrMin});
+
+    return Data.OptimalListData;
   }
 }

@@ -10,7 +10,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   SystemChrome.setPreferredOrientations([
-    DeviceOrientation.landscapeLeft,
+    DeviceOrientation.portraitUp,
   ]);
   runApp(
     MultiProvider(
