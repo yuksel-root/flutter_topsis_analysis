@@ -127,4 +127,17 @@ class Data {
   static List<dynamic> WeightListData = <dynamic>[];
   static List<dynamic> OptimalListData = <dynamic>[];
   static List<dynamic> SiListData = <dynamic>[];
+  static List<dynamic> CiListData = <dynamic>[];
+  static List<dynamic> SiHeaderData = <dynamic>[
+    {"Kriter": ""},
+    {"Kriter": "Si*"},
+    {"Kriter": "Si-"}
+  ];
+  static List<dynamic> ResultHeaderData = <dynamic>[
+    {"Kriter": ""},
+    {"Kriter": "Si*"},
+    {"Kriter": "Si-"},
+    {"Kriter": "Ci*"},
+    {"Kriter": "Sıralama"}
+  ];
 }

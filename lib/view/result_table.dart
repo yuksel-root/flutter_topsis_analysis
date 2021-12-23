@@ -49,7 +49,11 @@ class _ResultTableState extends State<ResultTable> {
         return DataRow(
           cells: Utils.modelBuilder(row['row'], (index, cell) {
             return DataCell(
-              Text(cell.toString()),
+              Text(cell is int
+                  ? cell.toString()
+                  : cell is double
+                      ? cell.toStringAsFixed(4)
+                      : cell.toString()),
               onTap: () {},
             );
           }),

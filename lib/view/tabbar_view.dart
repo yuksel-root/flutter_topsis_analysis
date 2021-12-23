@@ -77,15 +77,11 @@ class _TabbarViewState extends State<TabbarView> with TickerProviderStateMixin {
               ),
               ResultTable(
                 rowData: getSiList(),
-                kriterData: [
-                  {"Kriter": ""},
-                  {"Kriter": "Si*"},
-                  {"Kriter": "Si-"}
-                ],
+                kriterData: Data.SiHeaderData,
               ),
               ResultTable(
-                rowData: getNormalList(),
-                kriterData: Data.kriterData,
+                rowData: getCilist(),
+                kriterData: Data.ResultHeaderData,
               ),
             ],
           ),
@@ -185,7 +181,6 @@ class _TabbarViewState extends State<TabbarView> with TickerProviderStateMixin {
       }
     }
 
-    //Data.WeightListData.add({"row": row});
     // print({"WD": Data.WeightListData});
 
     return Data.WeightListData;
@@ -301,4 +296,46 @@ class _TabbarViewState extends State<TabbarView> with TickerProviderStateMixin {
 
     return Data.SiListData;
   }
+
+  List<dynamic> getCilist() {
+    Data.CiListData.clear();
+    final ci = [];
+    for (int l = 0; l < Data.SiListData.length; l++) {
+      ci.add(Data.SiListData[l]["row"][2] /
+          (Data.SiListData[l]["row"][2] + Data.SiListData[l]["row"][1]));
+    }
+    // print({"cis": ci});
+    final arrSort = [];
+
+    for (int i = 0; i < Data.SiListData.length; i++) {
+      arrSort.add(1);
+      for (int j = 0; j < Data.SiListData.length; j++) {
+        if (ci[i] < ci[j]) {
+          arrSort[i]++;
+        }
+      }
+    }
+    // print({"arrSort": arrSort});
+    for (int l = 0; l < Data.SiListData.length; l++) {
+      final arr = [];
+
+      for (int m = 0; m < Data.SiHeaderData.length; m++) {
+        arr.add(Data.SiListData[l]["row"][m]);
+      }
+      arr.add(ci[l]);
+
+      arr.add(arrSort[l]);
+      Data.CiListData.add({"row": arr});
+    }
+
+    // print({
+    //   "ci": Data.CiListData,
+    //   "arrsort": arrSort,
+    //   "FADDASDSADSADASD": 1 is double
+    // });
+
+    return Data.CiListData;
+  }
+
+  int a = 0;
 }
