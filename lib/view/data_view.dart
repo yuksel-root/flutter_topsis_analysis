@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_topsis_analysis/components/utils.dart';
 import 'package:flutter_topsis_analysis/components/text_dialog_widget.dart';
@@ -167,60 +169,76 @@ class _DataViewState extends State<DataView> {
   }
 
   Widget buildDataTable() {
-    return DataTable(
-      columns: getColumns(),
-      rows: getRows(),
-      headingRowColor: MaterialStateColor.resolveWith((states) {
-        return Colors.blue;
-      }),
-    );
-  }
+    return Center(
+        child: Column(children: <Widget>[
+      Container(
+        margin: EdgeInsets.all(20),
+        child: Table(
+          defaultColumnWidth: FixedColumnWidth(120.0),
+          border: TableBorder.all(
+              color: Colors.black, style: BorderStyle.solid, width: 1),
 
-  Container buildContaierIconField(IconData icon, Color iconColor) {
-    return Container(
-      height: context.dynamicWidth(0.05),
-      width: context.dynamicWidth(0.05),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
+          children: [getColumns(), ...getRows()], //liste kopyalama kodu
+        ),
       ),
-      child: Icon(icon, color: iconColor),
-      padding: EdgeInsets.all(context.dynamicWidth(0.0025)),
+    ]));
+  }
+
+  TableRow getColumns() {
+    return TableRow(
+      decoration: BoxDecoration(
+        border:
+            Border.all(color: Colors.black, style: BorderStyle.solid, width: 1),
+      ),
+      children: Utils.modelBuilder(
+        columnData,
+        (i, column) {
+          return InkWell(
+              customBorder: Border.all(
+                  color: Colors.black, style: BorderStyle.solid, width: 0.5),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    Text(
+                      column.toString(),
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              ),
+              onTap: () {
+                editColumn(column, i);
+              });
+        },
+      ),
     );
   }
 
-  List<DataColumn> getColumns() {
-    return Utils.modelBuilder(columnData, (i, column) {
-      return DataColumn(
-        label: InkWell(
-            child: Text(
-              column.toString(),
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            onTap: () {
-              editColumn(column, i);
-            }),
-        numeric: false,
-      );
-    });
-  }
-
-  List<DataRow> getRows() => rowData.map((row) {
-        return DataRow(
-          color: MaterialStateColor.resolveWith((states) {
-            return row["isRow"] ? Colors.white : Colors.blue;
-          }),
-          cells: Utils.modelBuilder(row['row'], (index, cell) {
-            return DataCell(
-              Text(
-                cell is int
-                    ? cell.toString()
-                    : cell is double
-                        ? cell.toStringAsFixed(4)
-                        : cell.toString(),
-                style: row['isRow']
-                    ? TextStyle(fontWeight: FontWeight.normal)
-                    : TextStyle(fontWeight: FontWeight.bold),
+  List<TableRow> getRows() => rowData.map((row) {
+        return TableRow(
+          decoration: BoxDecoration(
+            border: Border.all(
+                color: Colors.black, style: BorderStyle.solid, width: 0.5),
+          ),
+          children: Utils.modelBuilder(row['row'], (index, cell) {
+            return InkWell(
+              customBorder: Border.all(
+                  color: Colors.black, style: BorderStyle.solid, width: 0.5),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(children: [
+                  Text(
+                    cell is int
+                        ? cell.toString()
+                        : cell is double
+                            ? cell.toStringAsFixed(4)
+                            : cell.toString(),
+                    style: row['isRow']
+                        ? TextStyle(fontWeight: FontWeight.normal)
+                        : TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ]),
               ),
               onTap: () {
                 editCell(row['row'], index);
@@ -271,5 +289,18 @@ class _DataViewState extends State<DataView> {
           return column;
         }).toList());
     // print(columnData);
+  }
+
+  Container buildContaierIconField(IconData icon, Color iconColor) {
+    return Container(
+      height: context.dynamicWidth(0.05),
+      width: context.dynamicWidth(0.05),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Icon(icon, color: iconColor),
+      padding: EdgeInsets.all(context.dynamicWidth(0.0025)),
+    );
   }
 }
