@@ -1,92 +1,20 @@
 class Data {
-  static List<dynamic> kriterData = <dynamic>[
-    {
-      "Kriter": "",
-    },
-    {
-      "Kriter": "k1",
-    },
-    {
-      "Kriter": "k2",
-    },
-    {
-      "Kriter": "k3",
-    },
-    {
-      "Kriter": "k4",
-    },
-    {
-      "Kriter": "k5",
-    },
-    {
-      "Kriter": "k6",
-    },
-    {
-      "Kriter": "k7",
-    },
-    {
-      "Kriter": "k8",
-    },
-    {
-      "Kriter": "k9",
-    },
-    {
-      "Kriter": "k10",
-    },
-    {
-      "Kriter": "k11",
-    },
-    {
-      "Kriter": "k12",
-    },
-    {
-      "Kriter": "k13",
-    },
+  static List<dynamic> columnData = <dynamic>[
+    "KriterYönü",
+    "Fayda",
+    "Fayda",
+    "Fayda",
+    "Fayda",
+    "Fayda",
+    "Fayda",
+    "Fayda",
+    "Fayda",
+    "Fayda",
+    "Fayda",
+    "Fayda",
+    "Fayda",
+    "Fayda"
   ];
-  /*
-    {
-      "Kriter": "",
-    },
-    {
-      "Kriter": "k1",
-    },
-    {
-      "Kriter": "k2",
-    },
-    {
-      "Kriter": "k3",
-    },
-    {
-      "Kriter": "k4",
-    },
-    {
-      "Kriter": "k5",
-    },
-    {
-      "Kriter": "k6",
-    },
-    {
-      "Kriter": "k7",
-    },
-    {
-      "Kriter": "k8",
-    },
-    {
-      "Kriter": "k9",
-    },
-    {
-      "Kriter": "k10",
-    },
-    {
-      "Kriter": "k11",
-    },
-    {
-      "Kriter": "k12",
-    },
-    {
-      "Kriter": "k13",
-    },
-  */
 
   static List<dynamic> rowData = <dynamic>[
     {
@@ -105,39 +33,69 @@ class Data {
         0.08092,
         0.03269,
         0.00983
-      ]
+      ],
+      "isRow": false,
     },
     {
-      "row": ["aday1", 8, 6, 6, 2, 5, 8, 9, 7, 6, 6, 5, 6, 6]
+      "row": [
+        "Kriter",
+        "k1",
+        "k2",
+        "k3",
+        "k4",
+        "k5",
+        "k6",
+        "k7",
+        "k8",
+        "k9",
+        "k10",
+        "k11",
+        "k12",
+        "k13",
+      ],
+      "isRow": false,
     },
     {
-      "row": ["aday2", 2, 5, 6, 9, 7, 7, 7, 9, 8, 8, 7, 8, 7]
+      "row": ["aday1", 8, 6, 6, 2, 5, 8, 9, 7, 6, 6, 5, 6, 6],
+      "isRow": true,
+    },
+    {
+      "row": ["aday2", 2, 5, 6, 9, 7, 7, 7, 9, 8, 8, 7, 8, 7],
+      "isRow": true,
     },
     {
       "row": ["aday3", 2, 7, 8, 4, 2, 5, 9, 8, 7, 8, 9, 8, 8],
+      "isRow": true,
     },
     {
       "row": ["aday4", 3, 3, 4, 7, 4, 3, 5, 7, 7, 7, 8, 7, 9],
+      "isRow": true,
     },
     {
       "row": ["aday5", 8, 9, 9, 8, 9, 6, 8, 6, 7, 7, 6, 7, 7],
+      "isRow": true,
     }
   ];
-  static List<dynamic> NormalizationListData = <dynamic>[];
-  static List<dynamic> WeightListData = <dynamic>[];
-  static List<dynamic> OptimalListData = <dynamic>[];
-  static List<dynamic> SiListData = <dynamic>[];
-  static List<dynamic> CiListData = <dynamic>[];
-  static List<dynamic> SiHeaderData = <dynamic>[
-    {"Kriter": ""},
-    {"Kriter": "Si*"},
-    {"Kriter": "Si-"}
+
+  static List<dynamic> NormalizationRowData = <dynamic>[];
+
+  static List<dynamic> WeightNormalRowData = <dynamic>[];
+
+  static List<dynamic> OptimalRowData = <dynamic>[];
+
+  static List<dynamic> OptimalResultRowData = <dynamic>[];
+  static List<dynamic> OptimalResultColumnData = <dynamic>[
+    "",
+    "Si*",
+    "Si-",
   ];
-  static List<dynamic> ResultHeaderData = <dynamic>[
-    {"Kriter": ""},
-    {"Kriter": "Si*"},
-    {"Kriter": "Si-"},
-    {"Kriter": "Ci*"},
-    {"Kriter": "Sıralama"}
+
+  static List<dynamic> ResultRowData = <dynamic>[];
+  static List<dynamic> ResultColumnData = <dynamic>[
+    "",
+    "Si*",
+    "Si-",
+    "Ci*",
+    "Sıralama"
   ];
 }

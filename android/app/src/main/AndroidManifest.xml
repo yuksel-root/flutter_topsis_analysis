@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.flutter_sentiment_analysis">
+    package="com.example.flutter_topsis_analysis">
    <application
-        android:label="flutter_sentiment_analysis"
+        android:label="flutter_topsis_analysis"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

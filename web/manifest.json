@@ -1,6 +1,6 @@
 {
-    "name": "flutter_sentiment_analysis",
-    "short_name": "flutter_sentiment_analysis",
+    "name": "flutter_topsis_analysis",
+    "short_name": "flutter_topsis_analysis",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

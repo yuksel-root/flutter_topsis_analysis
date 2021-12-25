@@ -1,4 +1,4 @@
-package com.example.flutter_sentiment_analysis
+package com.example.flutter_topsis_analysis
 
 import io.flutter.embedding.android.FlutterActivity
 

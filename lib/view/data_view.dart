@@ -3,6 +3,8 @@ import 'package:flutter_topsis_analysis/components/utils.dart';
 import 'package:flutter_topsis_analysis/components/text_dialog_widget.dart';
 import 'package:flutter_topsis_analysis/core/constants/data.dart';
 import 'package:flutter_topsis_analysis/core/extension/context_extension.dart';
+import 'package:flutter_topsis_analysis/viewModel/topsisProvider.dart';
+import 'package:provider/provider.dart';
 
 class DataView extends StatefulWidget {
   @override
@@ -11,7 +13,7 @@ class DataView extends StatefulWidget {
 
 class _DataViewState extends State<DataView> {
   late List<dynamic> rowData;
-  late List<dynamic> kriterData;
+  late List<dynamic> columnData;
   TextEditingController? rowController;
   TextEditingController? columnController;
 
@@ -20,7 +22,7 @@ class _DataViewState extends State<DataView> {
     super.initState();
 
     this.rowData = List.of(Data.rowData);
-    this.kriterData = List.of(Data.kriterData);
+    this.columnData = List.of(Data.columnData);
     rowController = TextEditingController();
     columnController = TextEditingController();
   }
@@ -44,7 +46,7 @@ class _DataViewState extends State<DataView> {
               Expanded(
                 child: SingleChildScrollView(
                   scrollDirection: Axis.vertical,
-                  child: rowData.isNotEmpty || kriterData.isNotEmpty
+                  child: rowData.isNotEmpty || columnData.isNotEmpty
                       ? SingleChildScrollView(
                           child: buildDataTable(),
                           scrollDirection: Axis.horizontal)
@@ -102,12 +104,7 @@ class _DataViewState extends State<DataView> {
                 children: [
                   Expanded(child: createTableButton()),
                   Spacer(),
-                  Expanded(
-                      child: ElevatedButton(
-                          onPressed: () {},
-                          child: Text("Hesapla",
-                              style: TextStyle(
-                                  color: Colors.white, fontSize: 14)))),
+                  Expanded(child: calculateTablesButton()),
                 ],
               ),
             )
@@ -115,12 +112,27 @@ class _DataViewState extends State<DataView> {
         ),
       );
 
+  ElevatedButton calculateTablesButton() {
+    return ElevatedButton(
+        onPressed: () {
+          TopsisProvider().getNormalList();
+          TopsisProvider().getWeightNormalList();
+          TopsisProvider().getOptimalList();
+          TopsisProvider().getSiList();
+          TopsisProvider().getCilist();
+          Provider.of<TopsisProvider>(context, listen: false)
+              .navigateToResult(context);
+        },
+        child: Text("Hesapla",
+            style: TextStyle(color: Colors.white, fontSize: 14)));
+  }
+
   ElevatedButton createTableButton() {
     return ElevatedButton(
       onPressed: () {
-        kriterData.clear();
+        columnData.clear();
         rowData.clear();
-        Data.kriterData.clear();
+        Data.columnData.clear();
         Data.rowData.clear();
 
         final rowCount = rowController!.text;
@@ -140,11 +152,11 @@ class _DataViewState extends State<DataView> {
           rowData;
         });
         for (int k = 0; k < int.parse(columnCount) + 1; k++) {
-          kriterData.add({"Kriter": "k" + k.toString()});
-          Data.kriterData.add({"Kriter": "k" + k.toString()});
+          columnData.add({"Column": "k" + k.toString()});
+          Data.columnData.add({"Column": "k" + k.toString()});
         }
         setState(() {
-          kriterData;
+          columnData;
         });
       },
       child: Text("Tablo Oluştur",
@@ -156,8 +168,11 @@ class _DataViewState extends State<DataView> {
 
   Widget buildDataTable() {
     return DataTable(
-      columns: getColumns(kriterData),
+      columns: getColumns(),
       rows: getRows(),
+      headingRowColor: MaterialStateColor.resolveWith((states) {
+        return Colors.blue;
+      }),
     );
   }
 
@@ -174,24 +189,39 @@ class _DataViewState extends State<DataView> {
     );
   }
 
-  List<DataColumn> getColumns(List<dynamic> columns) {
-    return columns.map((dynamic column) {
+  List<DataColumn> getColumns() {
+    return Utils.modelBuilder(columnData, (i, column) {
       return DataColumn(
         label: InkWell(
-            child: Text(column['Kriter']),
+            child: Text(
+              column.toString(),
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
             onTap: () {
-              editColumn(column);
+              editColumn(column, i);
             }),
         numeric: false,
       );
-    }).toList();
+    });
   }
 
   List<DataRow> getRows() => rowData.map((row) {
         return DataRow(
+          color: MaterialStateColor.resolveWith((states) {
+            return row["isRow"] ? Colors.white : Colors.blue;
+          }),
           cells: Utils.modelBuilder(row['row'], (index, cell) {
             return DataCell(
-              Text(cell.toString()),
+              Text(
+                cell is int
+                    ? cell.toString()
+                    : cell is double
+                        ? cell.toStringAsFixed(4)
+                        : cell.toString(),
+                style: row['isRow']
+                    ? TextStyle(fontWeight: FontWeight.normal)
+                    : TextStyle(fontWeight: FontWeight.bold),
+              ),
               onTap: () {
                 editCell(row['row'], index);
               },
@@ -217,20 +247,29 @@ class _DataViewState extends State<DataView> {
         }).toList());
   }
 
-  Future editColumn(dynamic editColumn) async {
-    final data = await showTextDialog(
-      context,
-      title: 'Sütun Değeri Değiştir',
-      value: editColumn['Kriter'].toString(),
-    );
+  Future editColumn(dynamic editColumn, int index) async {
+    // final data = await showTextDialog(
+    //   context,
+    //   title: 'Sütun Değeri Değiştir',
+    //   value: editColumn['Column'].toString(),
+    // );
+    if (index == 0) return;
+
     int i = 0;
-    setState(() => kriterData = kriterData.map((column) {
-          if (column == editColumn) {
-            column['Kriter'] = data;
-            kriterData[i]["Kriter"] = data;
+    setState(() => columnData = columnData.map((column) {
+          //  print({"i": i, "index": index});
+          if (i == index) {
+            if (column == "Fayda") {
+              column = "Maliyet";
+              Data.columnData[i] = "Maliyet";
+            } else {
+              column = "Fayda";
+              Data.columnData[i] = "Fayda";
+            }
           }
           i++;
           return column;
         }).toList());
+    // print(columnData);
   }
 }

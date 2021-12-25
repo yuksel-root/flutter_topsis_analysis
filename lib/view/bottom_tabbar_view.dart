@@ -6,6 +6,7 @@ import 'package:flutter_topsis_analysis/core/notifier/tabbar_navigation_notifier
 
 import 'package:flutter_topsis_analysis/view/tabbar_view.dart';
 import 'package:flutter_topsis_analysis/view/data_view.dart';
+import 'package:flutter_topsis_analysis/viewModel/topsisProvider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -47,6 +48,12 @@ class _BottomTabbarViewState extends State<BottomTabbarView> {
           if (index == 0) {
             tabbarProvider.currentIndex = 0;
             _navigateHome(context);
+          } else {
+            TopsisProvider().getNormalList();
+            TopsisProvider().getWeightNormalList();
+            TopsisProvider().getOptimalList();
+            TopsisProvider().getSiList();
+            TopsisProvider().getCilist();
           }
         },
         items: [
