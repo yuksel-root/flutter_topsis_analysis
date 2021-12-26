@@ -1,5 +1,4 @@
-import 'dart:html';
-
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_topsis_analysis/components/utils.dart';
 import 'package:flutter_topsis_analysis/components/text_dialog_widget.dart';
@@ -31,7 +30,10 @@ class _DataViewState extends State<DataView> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(title: Center(child: Text("Veri Girişi"))),
+        appBar: AppBar(
+          title: Center(child: Text("Veri Girişi")),
+          backgroundColor: Color(0xff1c0f45),
+        ),
         body: Container(
           height: context.mediaQuery.size.height,
           child: Column(
@@ -44,6 +46,19 @@ class _DataViewState extends State<DataView> {
                   width: context.mediaQuery.size.width / 1.4,
                 ),
                 flex: 5,
+              ),
+              Expanded(
+                child: Container(
+                  color: Color(0xff1c0f45),
+                  child: Center(
+                    child: Text(
+                      "Karar Matrisi",
+                      style: Theme.of(context).textTheme.headline6?.copyWith(
+                          fontWeight: FontWeight.w300, color: Colors.white),
+                    ),
+                  ),
+                ),
+                flex: 1,
               ),
               Expanded(
                 child: SingleChildScrollView(
@@ -115,15 +130,25 @@ class _DataViewState extends State<DataView> {
       );
 
   ElevatedButton calculateTablesButton() {
+    Timer _timer;
     return ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(32.0),
+          ),
+        ),
         onPressed: () {
           TopsisProvider().getNormalList();
           TopsisProvider().getWeightNormalList();
           TopsisProvider().getOptimalList();
           TopsisProvider().getSiList();
           TopsisProvider().getCilist();
-          Provider.of<TopsisProvider>(context, listen: false)
-              .navigateToResult(context);
+          _timer = new Timer(const Duration(milliseconds: 300), () {
+            setState(() {
+              Provider.of<TopsisProvider>(context, listen: false)
+                  .navigateToResult(context);
+            });
+          });
         },
         child: Text("Hesapla",
             style: TextStyle(color: Colors.white, fontSize: 14)));
@@ -131,40 +156,59 @@ class _DataViewState extends State<DataView> {
 
   ElevatedButton createTableButton() {
     return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        primary: Color(0xff1c0f45),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(32.0),
+        ),
+      ),
       onPressed: () {
         columnData.clear();
         rowData.clear();
         Data.columnData.clear();
         Data.rowData.clear();
 
-        final rowCount = rowController!.text;
-        final columnCount = columnController!.text;
+        Future.delayed(Duration(milliseconds: 300), () {
+          var rowCount = rowController!.text;
+          var columnCount = columnController!.text;
 
-        for (int i = 0; i < int.parse(rowCount); i++) {
-          final arr = [];
-          arr.add("aday" + (i + 1).toString());
-          for (int j = 0; j < int.parse(columnCount); j++) {
-            arr.add(0);
+          for (int i = 0; i < int.parse(rowCount) + 2; i++) {
+            final arr = [];
+            if (i == 0)
+              arr.add("K.Ağırlık");
+            else if (i == 1)
+              arr.add("Kriter Kodu");
+            else
+              arr.add("row" + (i - 1).toString()); //adaylar
+            for (int j = 0; j < int.parse(columnCount); j++) {
+              if (i == 1)
+                arr.add("k" + (j + 1).toString());
+              else
+                arr.add(0);
+            }
+
+            rowData.add({"row": arr, "isRow": i != 0 && i != 1});
+            Data.rowData.add({"row": arr, "isRow": i != 0 && i != 1});
           }
-
-          rowData.add({"row": arr});
-          Data.rowData.add({"row": arr});
-        }
-        setState(() {
-          rowData;
-        });
-        for (int k = 0; k < int.parse(columnCount) + 1; k++) {
-          columnData.add({"Column": "k" + k.toString()});
-          Data.columnData.add({"Column": "k" + k.toString()});
-        }
-        setState(() {
-          columnData;
+          setState(() {
+            rowData;
+          });
+          for (int k = 0; k < int.parse(columnCount) + 1; k++) {
+            if (k == 0) {
+              columnData.add("Kriter Yönü");
+              Data.columnData.add("Kriter Yönü");
+            } else {
+              columnData.add("Fayda");
+              Data.columnData.add("Fayda");
+            }
+          }
+          setState(() {
+            columnData;
+          });
         });
       },
       child: Text("Tablo Oluştur",
           style: TextStyle(color: Colors.white, fontSize: 15)),
-      style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all<Color>(Color(0xff1c0f45))),
     );
   }
 
@@ -193,23 +237,26 @@ class _DataViewState extends State<DataView> {
       children: Utils.modelBuilder(
         columnData,
         (i, column) {
-          return InkWell(
-              customBorder: Border.all(
-                  color: Colors.black, style: BorderStyle.solid, width: 0.5),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  children: [
-                    Text(
-                      column.toString(),
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  ],
+          return Container(
+            color: Color(0xff00b2ee),
+            child: InkWell(
+                customBorder: Border.all(
+                    color: Colors.black, style: BorderStyle.solid, width: 0.5),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      Text(
+                        column.toString(),
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              onTap: () {
-                editColumn(column, i);
-              });
+                onTap: () {
+                  editColumn(column, i);
+                }),
+          );
         },
       ),
     );
@@ -225,20 +272,25 @@ class _DataViewState extends State<DataView> {
             return InkWell(
               customBorder: Border.all(
                   color: Colors.black, style: BorderStyle.solid, width: 0.5),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(children: [
-                  Text(
-                    cell is int
-                        ? cell.toString()
-                        : cell is double
-                            ? cell.toStringAsFixed(4)
-                            : cell.toString(),
-                    style: row['isRow']
-                        ? TextStyle(fontWeight: FontWeight.normal)
-                        : TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ]),
+              child: Ink(
+                color: row['isRow'] && index != 0
+                    ? Colors.white
+                    : Color(0xff00b2ee),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(children: [
+                    Text(
+                      cell is int
+                          ? cell.toString()
+                          : cell is double
+                              ? cell.toStringAsFixed(4)
+                              : cell.toString(),
+                      style: row['isRow'] && index != 0
+                          ? TextStyle(fontWeight: FontWeight.normal)
+                          : TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ]),
+                ),
               ),
               onTap: () {
                 editCell(row['row'], index);
@@ -257,8 +309,13 @@ class _DataViewState extends State<DataView> {
     int i = 0;
     setState(() => rowData = rowData.map((row) {
           if (row['row'] == editRow) {
-            row['row'][index] = data; //edit screen
-            rowData[i]["row"][index] = data; // edit list
+            if (row['isRow']) {
+              row['row'][index] = double.parse(data); //edit screen
+              rowData[i]["row"][index] = double.parse(data); // edit list
+            } else {
+              row['row'][index] = data; //edit screen
+              rowData[i]["row"][index] = data; // edit list
+            }
           }
           i++;
           return row;

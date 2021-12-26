@@ -38,7 +38,7 @@ class Data {
     },
     {
       "row": [
-        "Kriter",
+        "Kriter Kodu",
         "k1",
         "k2",
         "k3",

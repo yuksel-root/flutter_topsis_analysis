@@ -19,7 +19,7 @@ class TopsisProvider with ChangeNotifier {
         arr.add(Data.rowData[l]["row"][m]);
       }
       // print(arr);
-      Data.NormalizationRowData.add({"row": arr, "isRow": true});
+      Data.NormalizationRowData.add({"row": arr, "isRow": l != 1});
     }
     //print({"normal": Data.NormalizationRowData});
     for (int i = 1; i < (Data.columnData.length); i++) {
@@ -64,7 +64,7 @@ class TopsisProvider with ChangeNotifier {
         arr.add(Data.rowData[l]["row"][m]);
       }
       // print(arr);
-      Data.WeightNormalRowData.add({"row": arr, "isRow": true});
+      Data.WeightNormalRowData.add({"row": arr, "isRow": l == 1});
     }
 
     for (int l = 0; l < Data.NormalizationRowData.length - 1; l++) {
@@ -74,7 +74,7 @@ class TopsisProvider with ChangeNotifier {
         arr.add(Data.NormalizationRowData[l]["row"][m]);
       }
       // print(arr);
-      Data.WeightNormalRowData.add({"row": arr, "isRow": true});
+      Data.WeightNormalRowData.add({"row": arr, "isRow": l != 0});
     }
     //print({"weightList": Data.WeightNormalRowData});
     for (int i = 1; i < (Data.columnData.length); i++) {
@@ -122,7 +122,7 @@ class TopsisProvider with ChangeNotifier {
         arr.add(Data.WeightNormalRowData[l]["row"][m]);
       }
       // print(arr);
-      Data.OptimalRowData.add({"row": arr, "isRow": true});
+      Data.OptimalRowData.add({"row": arr, "isRow": l != 1});
     }
 
     final arrPositive = [];
