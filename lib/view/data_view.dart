@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_topsis_analysis/components/alert_dialog.dart';
 import 'package:flutter_topsis_analysis/components/utils.dart';
 import 'package:flutter_topsis_analysis/components/text_dialog_widget.dart';
 import 'package:flutter_topsis_analysis/core/constants/data.dart';
@@ -163,49 +164,57 @@ class _DataViewState extends State<DataView> {
         ),
       ),
       onPressed: () {
-        columnData.clear();
-        rowData.clear();
-        Data.columnData.clear();
-        Data.rowData.clear();
+        final rowCount = rowController!.text;
+        final columnCount = columnController!.text;
+        if (rowCount != "" || columnCount != "") {
+          if (int.parse(rowCount) < 51 || int.parse(rowCount) < 51) {
+            columnData.clear();
+            rowData.clear();
+            Data.columnData.clear();
+            Data.rowData.clear();
 
-        Future.delayed(Duration(milliseconds: 300), () {
-          var rowCount = rowController!.text;
-          var columnCount = columnController!.text;
+            Future.delayed(Duration(milliseconds: 300), () {
+              for (int i = 0; i < int.parse(rowCount) + 2; i++) {
+                final arr = [];
+                if (i == 0)
+                  arr.add("K.Ağırlık");
+                else if (i == 1)
+                  arr.add("Kriter Kodu");
+                else
+                  arr.add("row" + (i - 1).toString()); //adaylar
+                for (int j = 0; j < int.parse(columnCount); j++) {
+                  if (i == 1)
+                    arr.add("k" + (j + 1).toString());
+                  else
+                    arr.add(0);
+                }
 
-          for (int i = 0; i < int.parse(rowCount) + 2; i++) {
-            final arr = [];
-            if (i == 0)
-              arr.add("K.Ağırlık");
-            else if (i == 1)
-              arr.add("Kriter Kodu");
-            else
-              arr.add("row" + (i - 1).toString()); //adaylar
-            for (int j = 0; j < int.parse(columnCount); j++) {
-              if (i == 1)
-                arr.add("k" + (j + 1).toString());
-              else
-                arr.add(0);
-            }
-
-            rowData.add({"row": arr, "isRow": i != 0 && i != 1});
-            Data.rowData.add({"row": arr, "isRow": i != 0 && i != 1});
+                rowData.add({"row": arr, "isRow": i != 0 && i != 1});
+                Data.rowData.add({"row": arr, "isRow": i != 0 && i != 1});
+              }
+              setState(() {
+                rowData;
+              });
+              for (int k = 0; k < int.parse(columnCount) + 1; k++) {
+                if (k == 0) {
+                  columnData.add("Kriter Yönü");
+                  Data.columnData.add("Kriter Yönü");
+                } else {
+                  columnData.add("Fayda");
+                  Data.columnData.add("Fayda");
+                }
+              }
+              setState(() {
+                columnData;
+              });
+            });
+          } else {
+            _showDialog(
+                context, "Hata", "Satır ve Sütun sayısı 50 yi geçemez!");
           }
-          setState(() {
-            rowData;
-          });
-          for (int k = 0; k < int.parse(columnCount) + 1; k++) {
-            if (k == 0) {
-              columnData.add("Kriter Yönü");
-              Data.columnData.add("Kriter Yönü");
-            } else {
-              columnData.add("Fayda");
-              Data.columnData.add("Fayda");
-            }
-          }
-          setState(() {
-            columnData;
-          });
-        });
+        } else {
+          _showDialog(context, "Hata", "Satır ve Sütun sayısı giriniz!");
+        }
       },
       child: Text("Tablo Oluştur",
           style: TextStyle(color: Colors.white, fontSize: 15)),
@@ -358,6 +367,24 @@ class _DataViewState extends State<DataView> {
       ),
       child: Icon(icon, color: iconColor),
       padding: EdgeInsets.all(context.dynamicWidth(0.0025)),
+    );
+  }
+
+  _showDialog(BuildContext context, String title, String content) {
+    AlertView alert = AlertView(
+      title: title,
+      content: content,
+      continueFunction: () => {
+        Navigator.of(context).pop(),
+      },
+    );
+
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
     );
   }
 }
