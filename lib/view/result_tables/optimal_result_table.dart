@@ -45,7 +45,7 @@ class _OptimalResultTableState extends State<OptimalResultTable> {
                     ),
                   ),
                 ),
-                flex: 2,
+                flex: 3,
               ),
               Expanded(
                 flex: 20,

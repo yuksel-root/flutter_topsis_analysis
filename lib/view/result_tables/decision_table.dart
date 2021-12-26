@@ -42,7 +42,7 @@ class _DecisionTableState extends State<DecisionTable> {
                     ),
                   ),
                 ),
-                flex: 2,
+                flex: 3,
               ),
               Expanded(
                 flex: 20,

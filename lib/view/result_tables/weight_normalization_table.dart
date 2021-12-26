@@ -45,7 +45,7 @@ class _WeightNormalTableState extends State<WeightNormalTable> {
                     ),
                   ),
                 ),
-                flex: 2,
+                flex: 3,
               ),
               Expanded(
                 flex: 20,

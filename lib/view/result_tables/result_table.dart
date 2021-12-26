@@ -39,13 +39,13 @@ class _ResultTableState extends State<ResultTable> {
                   color: Color(0xff1c0f45),
                   child: Center(
                     child: Text(
-                      "Pozitif İdeal ve Negatif İdeal Noktalara Olan Uzaklıkların Hesaplanması",
+                      "İdeal Çözüme Olan Göreli Yakınlığın Hesaplanması",
                       style: Theme.of(context).textTheme.headline6?.copyWith(
                           fontWeight: FontWeight.w300, color: Colors.white),
                     ),
                   ),
                 ),
-                flex: 2,
+                flex: 3,
               ),
               Expanded(
                 flex: 20,

@@ -44,7 +44,7 @@ class _NormalizationTableState extends State<NormalizationTable> {
                     ),
                   ),
                 ),
-                flex: 2,
+                flex: 3,
               ),
               Expanded(
                 flex: 20,
